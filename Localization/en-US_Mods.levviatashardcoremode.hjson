@@ -1,4 +1,6 @@
 Keybinds: {
 	"Hide GUI.DisplayName": Hide  G U I
 	"Show GUI.DisplayName": Show  G U I
+	"Show Gui.DisplayName": Show  Gui
+	"Hide Gui.DisplayName": Hide  Gui
 }

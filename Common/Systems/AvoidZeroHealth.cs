@@ -10,9 +10,9 @@ namespace levviatashardcoremode.Common.Systems
     {
         public override void OnWorldLoad()
         {
-            if (Main.LocalPlayer.statLife < 0) 
+            if (Main.LocalPlayer.statLife <= 0) 
             {
-                Main.LocalPlayer.statLife = Main.LocalPlayer.statLifeMax;
+                
             }
         }
     }
