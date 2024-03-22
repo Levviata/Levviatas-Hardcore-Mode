@@ -1,0 +1,3 @@
+displayName = Levviata's Hardcore Mode
+author = Levviata
+version = 0.1
