@@ -5,11 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
-using Terraria.UI; 
+using Terraria.UI;
+using static levviatashardcoremode.Common.Players.LHCMPlayer;
 
 namespace levviatashardcoremode.Common.Systems
 {
@@ -21,17 +24,21 @@ namespace levviatashardcoremode.Common.Systems
 		internal DeathUI UI;
 		Boolean isPressed = false;
 		private GameTime _lastUpdateUiGameTime;
-		internal void ShowMyUI()
+		public float currentVolume;
+		public static float initialVolume;
+		private int timer = 0;
+        internal void ShowMyUI()
 		{
 			inter?.SetState(UI);
 		}
 
-		internal void HideMyUI()
+        internal void HideMyUI()
 		{
 			inter?.SetState(null);
 		}
 		public override void Load()
 		{
+            
 			if (!Main.dedServ)
 			{
 				inter = new UserInterface();
@@ -44,40 +51,50 @@ namespace levviatashardcoremode.Common.Systems
 		{
 			UI = null;
 		}
-		public override void UpdateUI(GameTime gameTime)
+        public override void OnWorldLoad()
+        {
+            initialVolume = Main.musicVolume;
+        }
+        public override void UpdateUI(GameTime gameTime)
 		{
-			_lastUpdateUiGameTime = gameTime;
+			timer++;
+            _lastUpdateUiGameTime = gameTime;
 			if (inter?.CurrentState != null)
 			{
 				inter.Update(gameTime);
 			}
+            if (Main.musicVolume <= 0) Main.musicVolume = 0;
+            if (timer >= 10)
+			{
+				if (!Main.gamePaused) //trampoline
+					if (playerDead) //weee
+						Main.musicVolume -= 0.10f; //AAAAAAAAAAA
+				timer = 0;
+            }
+            // Debugging
 
-			// Debugging
-
-			if (KeybindSystem.showGUIKeybind.JustPressed)
+            if (KeybindSystem.showGUIKeybind.JustPressed)
 			{
 				isPressed = !isPressed;
 				ShowMyUI();
 			}
-		
-
+		 
 			if (KeybindSystem.hideGUIKeybind.JustPressed) 
 			{
 				isPressed = false;
 				HideMyUI(); 
 			}
 
-			//The thing that makes it work
-
-			if (Main.LocalPlayer.statLife > 0) //Alive, boooooo
+            if (Main.LocalPlayer.statLife > 2) 
 			{
-				if (!isPressed)
+                if (!isPressed)
 					HideMyUI();
 			}
-			if (Main.LocalPlayer.dead) //Dead yipeeee
+			if (Main.LocalPlayer.statLife <= 0) 
 			{
-				ShowMyUI();
-			}
+                ShowMyUI();
+
+            }
 		}
 		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{

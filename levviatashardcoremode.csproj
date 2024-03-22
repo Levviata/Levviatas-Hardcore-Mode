@@ -15,5 +15,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\Events\" />
+    <Folder Include="Common\NPCs\" />
   </ItemGroup>
 </Project>
