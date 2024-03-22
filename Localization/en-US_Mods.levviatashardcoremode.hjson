@@ -1,1 +1,4 @@
-# This file will automatically update with entries for new content after a build and reload
+Keybinds: {
+	"Hide GUI.DisplayName": Hide  G U I
+	"Show GUI.DisplayName": Show  G U I
+}
