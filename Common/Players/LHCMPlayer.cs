@@ -38,6 +38,7 @@ namespace levviatashardcoremode.Common.Players
         }
         public override void OnRespawn()
 		{
+            Main.blockInput = false;
             increaseAbove = 0;
             increasebelow = 0;
             aboveTop = 0;

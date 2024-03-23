@@ -8,6 +8,17 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Assets\UI\Marker1.png" />
+    <None Remove="Assets\UI\Marker10.png" />
+    <None Remove="Assets\UI\Marker11.png" />
+    <None Remove="Assets\UI\Marker2.png" />
+    <None Remove="Assets\UI\Marker3.png" />
+    <None Remove="Assets\UI\Marker4.png" />
+    <None Remove="Assets\UI\Marker5.png" />
+    <None Remove="Assets\UI\Marker6.png" />
+    <None Remove="Assets\UI\Marker7.png" />
+    <None Remove="Assets\UI\Marker8.png" />
+    <None Remove="Assets\UI\Marker9.png" />
     <None Remove="Assets\UI\PanelBorder.png" />
   </ItemGroup>
   <ItemGroup>
