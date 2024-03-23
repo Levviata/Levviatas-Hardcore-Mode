@@ -38,15 +38,20 @@ namespace levviatashardcoremode.Common.Players
         }
         public override void OnRespawn()
 		{
-            Main.blockInput = false;
+            backgroundAlpha = 0;
+            
             increaseAbove = 0;
             increasebelow = 0;
+
             aboveTop = 0;
 			belowTop = 0;
+
+            playerDead = false;
+
             Main.musicVolume = initialVolume;
             Main.LocalPlayer.lifeRegen = Main.LocalPlayer.lifeRegen;
-            playerDead = false;
-			Main.LocalPlayer.immuneNoBlink = false;
+            Main.blockInput = false;
+            Main.LocalPlayer.immuneNoBlink = false;
 		}
 	}
 }

@@ -48,16 +48,21 @@ namespace levviatashardcoremode.Common.Systems
         private int timer = 0;
         private int timerUIAbove = 0;
         private int timerUIBelow = 0;
+
         public static int timerMarker = 0;
         public static int markerIndex = 0;
 
-        public static int markerUpdateFrequency = 5;
+        public static int timerBackground = 0;
+
+        public static int markerUpdateFrequency = 3;
 
         public static int aboveTop = 0;
         public static int increaseAbove = 0;
 
         public static int belowTop = 0;
         public static int increasebelow = 0;
+
+        public static int backgroundAlpha = 0;
 
         
         internal void ShowBars()
@@ -139,6 +144,7 @@ namespace levviatashardcoremode.Common.Systems
         }
         public override void OnWorldLoad()
         {
+            backgroundAlpha = 0;
             increaseAbove = 0;
             increasebelow = 0;
             aboveTop = 0;
@@ -158,6 +164,7 @@ namespace levviatashardcoremode.Common.Systems
             timerUIAbove++;
             timerUIBelow++;
             timerMarker++;
+            timerBackground++;
 
             _lastUpdateUiGameTime = gameTime;
             if (interAbove?.CurrentState != null)
@@ -231,7 +238,7 @@ namespace levviatashardcoremode.Common.Systems
             int resourceBarsIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Resource Bars"));
             int mouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
 
-           /*layers.Insert(51, new LegacyGameInterfaceLayer(
+           layers.Insert(51, new LegacyGameInterfaceLayer(
                 "LHardcoreMode: Death Screen",
                 delegate
                 {
@@ -246,7 +253,7 @@ namespace levviatashardcoremode.Common.Systems
                     /*if (_lastUpdateUiGameTime != null && interMarker?.CurrentState != null)
                     {
                         interMarker.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
-                    }*//*
+                    }*/
                     return true;
                 },
                 InterfaceScaleType.UI));
@@ -260,9 +267,9 @@ namespace levviatashardcoremode.Common.Systems
                     }
                     return true;
                 },
-                InterfaceScaleType.UI));*/
+                InterfaceScaleType.UI));
 
-            layers.Insert(52, new LegacyGameInterfaceLayer(
+            layers.Insert(49, new LegacyGameInterfaceLayer(
                     "LHardcoreMode: Background",
                     delegate
                     {
@@ -343,12 +350,12 @@ namespace levviatashardcoremode.Common.Systems
             }
             public override void Update(GameTime gameTime)
             {
-                if (backgroundAlpha < 255)
+                if (backgroundAlpha > 180)
                 {
-                    if (timerMarker > 5)
+                    if (timerBackground > 1)
                     {
-                        markerIndex++;
-                        panelBackground.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Marker{markerIndex}"));
+                        backgroundAlpha += 3;
+                        panelBackground.BackgroundColor = new Color(0, 0, 0, backgroundAlpha);
                         Append(panelBackground);
 
                     }
