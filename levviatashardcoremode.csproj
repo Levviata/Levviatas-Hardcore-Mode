@@ -17,7 +17,6 @@
     <None Remove="Assets\UI\Font\6.png" />
     <None Remove="Assets\UI\Font\7.png" />
     <None Remove="Assets\UI\Font\8.png" />
-    <None Remove="Assets\UI\Font\9.png" />
     <None Remove="Assets\UI\Font\Container\digitContainer.png" />
     <None Remove="Assets\UI\Font\doubleDots.png" />
     <None Remove="Assets\UI\Marker1.png" />

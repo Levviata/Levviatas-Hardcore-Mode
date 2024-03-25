@@ -11,7 +11,9 @@ using System.Timers;
 using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
+using static levviatashardcoremode.Common.Players.LHCMPlayer;
 using static levviatashardcoremode.Common.Systems.BossRushHandler;
+using static levviatashardcoremode.Common.Systems.DeathHandler;
 using static levviatashardcoremode.Common.Systems.BossRushTimer;
 
 namespace levviatashardcoremode.Common.Systems
@@ -21,16 +23,18 @@ namespace levviatashardcoremode.Common.Systems
         internal UserInterface inter;
         internal BossRushTimer UI;
 
-        public static bool played = false;
+        public static bool playedCounterSong = false;
 
         private GameTime _lastUpdateUiGameTime;
         public static int timer;
 
-        public static int milliseconds;
+        public static DateTime startTime;
+        public static TimeSpan time;
+        public static readonly int countDownStartTime = 120000;
+
 
         public override void Load()
         {
-            milliseconds = 147600;
             if (!Main.dedServ)
             {
                 inter = new UserInterface();
@@ -41,10 +45,12 @@ namespace levviatashardcoremode.Common.Systems
         }
         public override void Unload()
         {
-            milliseconds = 147600;
             UI = null;
         }
-        
+        public override void OnWorldLoad()
+        {
+            shouldShowCounter = false;
+        }
         internal void ShowMyUI()
         {
             inter?.SetState(UI);
@@ -70,10 +76,12 @@ namespace levviatashardcoremode.Common.Systems
             {
                 HideMyUI();
             }
-            if (timer > 1)
+
+            if (shouldShowCounter)
             {
-                inter?.SetState(UI);
+                 inter?.SetState(UI);
             }
+            
         }
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
@@ -175,33 +183,38 @@ namespace levviatashardcoremode.Common.Systems
             text2.Left.Set(-1, 0);
             text2.ImageScale = 4f;
             container.Append(text2);*/
-
+            startTime = DateTime.Now;
         }
         public override void Update(GameTime gameTime)
         {
             if (timer > 1)
             {
-                if (!played)
+                if (time.Minutes > 0 && time.Seconds > 0 && time.Milliseconds > 0)
                 {
-                    played = true;
-                    SoundEngine.PlaySound(new SoundStyle("levviatashardcoremode/Assets/Music/redemption"));
+                    shouldShowCounter = false; // Set the flag to hide the counter
                 }
-                if (!Main.gamePaused)
+                if (!playedCounterSong)
                 {
-                    milliseconds--;
-
-                    TimeSpan time = TimeSpan.FromMilliseconds(milliseconds);
-
-                    // Convert milliseconds to hours, minutes, seconds, and milliseconds
+                    playedCounterSong = true;
+                    //SoundEngine.PlaySound(new SoundStyle("levviatashardcoremode/Assets/Music/redemption"));
+                }
+                if (!Main.gamePaused && shouldShowCounter)
+                {
+                    time = DateTime.Now - startTime;
+                    /*Main.NewText(time.Minutes);
+                    Main.NewText(time.Seconds);
+                    Main.NewText(time.Milliseconds);*/
+                    // Convert milliseconds to minutes, seconds, and milliseconds
 
                     int[] secondsList = GetDigits(time.Seconds, 2);
                     int[] millisecondsList = GetDigits(time.Milliseconds, 3);
-                    int[] minutesList = GetDigits(time.Minutes, 2);
-                    text2.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{secondsList[0]}"));
-                    text3.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{secondsList[1]}"));
-                    text4.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{millisecondsList[0]}"));
-                    text5.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{millisecondsList[1]}"));
-                    text6.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{millisecondsList[2]}"));
+                    int[] minutesList = GetDigits(time.Minutes, 1);
+                    
+                    text2.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{minutesList[0]}"));
+                    text3.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{secondsList[0]}"));
+                    text4.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{secondsList[1]}"));
+                    text5.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{millisecondsList[0]}"));
+                    text6.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{millisecondsList[1]}"));
 
                     container.Append(text2);
                     container.Append(text3);
@@ -247,24 +260,5 @@ namespace levviatashardcoremode.Common.Systems
 
             return digits.ToArray();
         }
-        public static int[] GetDigitsMilli(int number)
-        {
-            if (number == 0)
-            {
-                return new int[] { 0, 0, 0, 0, 0, 0 }; // ZEROS AND ZEROS AND ZEROS YIPEEEEEEE
-            }
-
-            List<int> digits = new List<int>();
-
-            while (number > 0)
-            {
-                digits.Add(number % 100);
-                number /= 100;
-            }
-
-            digits.Reverse();
-            return digits.ToArray();
-        }
-
     }
 }

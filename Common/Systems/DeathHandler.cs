@@ -45,7 +45,8 @@ namespace levviatashardcoremode.Common.Systems
 		internal DeathUIBackground UIBackground;
 
 		Boolean isPressed = false;
-		public static Boolean played = false;
+        public static bool shouldShowCounter = false;
+        public static Boolean played = false;
 		public static Boolean shootPlayed = false;
 		public static Boolean shouldStartTimerShoot;
 		public static Boolean shouldKillPlayer = false;
@@ -261,7 +262,7 @@ namespace levviatashardcoremode.Common.Systems
 				interBackground.Update(gameTime);
 			}
 
-
+			
 			//Music handling
 
 			if (Main.musicVolume <= 0) Main.musicVolume = 0;
@@ -271,11 +272,6 @@ namespace levviatashardcoremode.Common.Systems
 					if (playerDead) //weee
 						Main.musicVolume -= 0.10f; //AAAAAAAAAAA
 				timerMusic = 0;
-			}
-
-			if (playerDead) 
-			{  
-				//Main.blockInput = true;
 			}
 
             if (Main.netMode != NetmodeID.Server && Filters.Scene["levviatashardcoremode:Shockwave"].IsActive())
@@ -337,11 +333,10 @@ namespace levviatashardcoremode.Common.Systems
 			// Store a copy of the original layers
 			initialLayers = new List<GameInterfaceLayer>(layers);
 
-			// Define the indices of the layers to keep
 			List<int> indicesToRemove = new List<int> { 34, 36, 38, 39};
 
-			// Create a new list with only the layers to keep
 			List<GameInterfaceLayer> newLayers = new List<GameInterfaceLayer>();
+
 			if (Main.LocalPlayer.statLife > 2 || KeybindSystem.hideGUIKeybind.JustPressed) //Dont change value to anything below 2
 			{
 				layers.AddRange(initialLayers);
@@ -353,14 +348,14 @@ namespace levviatashardcoremode.Common.Systems
 				Main.mapOverlayAlpha = 0;
 
 				// Iterate through the list in reverse order
-				for (int i = layers.Count - 1; i >= 0; i--)
+				/*for (int i = layers.Count - 1; i >= 0; i--)
 				{
 					// If the current index is in the list of indices to remove, remove the layer
 					if (indicesToRemove.Contains(i))
 					{
 						layers.RemoveAt(i);
 					}
-				}
+				}*/
 			}
 
 			layers.Insert(51, new LegacyGameInterfaceLayer(
@@ -381,13 +376,13 @@ namespace levviatashardcoremode.Common.Systems
 					}*/
 					return true;
 				},
-				InterfaceScaleType.UI));
+				InterfaceScaleType.None));
 			layers.Insert(50, new LegacyGameInterfaceLayer(
 			   "LHardcoreMode: Marker",
 			   delegate
                {
 				   if (playerDead) {
-                       if (Main.netMode != NetmodeID.Server && !Filters.Scene["levviatashardcoremode:Shockwave"].IsActive())
+                     /*  if (Main.netMode != NetmodeID.Server && !Filters.Scene["levviatashardcoremode:Shockwave"].IsActive())
                        {
                            Filters.Scene.Activate("levviatashardcoremode:Shockwave", Main.LocalPlayer.Center).GetShader().UseColor(3, 5, 15).UseTargetPosition(Main.LocalPlayer.Center);
                        }
@@ -395,7 +390,7 @@ namespace levviatashardcoremode.Common.Systems
                        {
                            float progress = 180f / 60f; // Will range from -3 to 3, 0 being the point where the bomb explodes.
                            Filters.Scene["levviatashardcoremode:Shockwave"].GetShader().UseProgress(progress).UseOpacity(100f * (1 - progress / 3f));
-                       }
+                       }*/
                        Main.UIScale = 1;
 					   int playerIndex = Main.LocalPlayer.whoAmI;
 					   Player player = Main.LocalPlayer;
@@ -422,7 +417,7 @@ namespace levviatashardcoremode.Common.Systems
 				   }
 				   return true;
 			   },
-			   InterfaceScaleType.UI));
+			   InterfaceScaleType.None));
 
 			layers.Insert(49, new LegacyGameInterfaceLayer(
 				   "LHardcoreMode: Background",
@@ -434,7 +429,7 @@ namespace levviatashardcoremode.Common.Systems
 					   }
 					   return true;
 				   },
-				   InterfaceScaleType.UI));
+				   InterfaceScaleType.None));
 			initialLayers = layers;
 		}
 		public class DeathUIAbove : UIState

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria.DataStructures;
 using Terraria.Graphics.Effects;
+using static levviatashardcoremode.Common.Systems.BossRushHandler;
 using static levviatashardcoremode.Common.Systems.DeathHandler;
 
 namespace levviatashardcoremode.Common.Players
@@ -40,6 +41,9 @@ namespace levviatashardcoremode.Common.Players
         }
         public override void OnRespawn()
 		{
+            startTime = DateTime.Now.AddMilliseconds(countDownStartTime);
+            shouldShowCounter = true;
+
             afterMarkerIndex = 0;
             played = false;
 			shootPlayed = false;
@@ -58,10 +62,6 @@ namespace levviatashardcoremode.Common.Players
             Main.mapOverlayAlpha = 0.35f;
             Main.musicVolume = initialVolume;
             Main.UIScale = initialUISize;
-            if (Main.netMode != NetmodeID.Server && Filters.Scene["Shockwave"].IsActive())
-            {
-                Filters.Scene["Shockwave"].Deactivate();
-            }
 
             Main.LocalPlayer.lifeRegen = Main.LocalPlayer.lifeRegen;
             Main.blockInput = false;
