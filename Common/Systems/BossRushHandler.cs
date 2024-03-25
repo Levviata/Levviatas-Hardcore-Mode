@@ -189,20 +189,20 @@ namespace levviatashardcoremode.Common.Systems
                 if (!Main.gamePaused)
                 {
                     milliseconds--;
-                    //seconds = milliseconds / 60;
 
                     TimeSpan time = TimeSpan.FromMilliseconds(milliseconds);
 
                     // Convert milliseconds to hours, minutes, seconds, and milliseconds
 
-                    int[] secondsList = GetDigits(time.Seconds);
-                    int[] millisecondsList = GetDigits(time.Milliseconds);
-                    int[] minutesList = GetDigits(time.Minutes);
-                    text2.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{minutesList[0]}"));
-                    text3.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{secondsList[0]}"));
-                    text4.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{secondsList[1]}"));
-                    text5.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{millisecondsList[0]}"));
-                    text6.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{millisecondsList[1]}"));
+                    int[] secondsList = GetDigits(time.Seconds, 2);
+                    int[] millisecondsList = GetDigits(time.Milliseconds, 3);
+                    int[] minutesList = GetDigits(time.Minutes, 2);
+                    text2.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{secondsList[0]}"));
+                    text3.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{secondsList[1]}"));
+                    text4.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{millisecondsList[0]}"));
+                    text5.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{millisecondsList[1]}"));
+                    text6.SetImage(ModContent.Request<Texture2D>($"levviatashardcoremode/Assets/UI/Font/{millisecondsList[2]}"));
+
                     container.Append(text2);
                     container.Append(text3);
                     container.Append(text4);
@@ -213,23 +213,38 @@ namespace levviatashardcoremode.Common.Systems
                 timer = 0;
             }
         }
-        public static int[] GetDigits(int number)
-        {
 
+        public static int[] GetDigits(int number, int desiredLength)
+        {
+            // Check if the number is 0, then return an array containing only 0
             if (number == 0)
             {
-                return new int[] { 0, 0, 0, 0, 0, 0 }; // ZEROS AND ZEROS AND ZEROS YIPEEEEEEE
+                // Return an array of zeros with the desired length
+                return Enumerable.Repeat(0, desiredLength).ToArray();
             }
 
             List<int> digits = new List<int>();
 
+            // If the number is negative, treat its absolute value
+            number = Math.Abs(number);
+
+            // Extract digits
             while (number > 0)
             {
-                digits.Add(number % 10);
+                int digit = number % 10;
+                digits.Add(digit);
                 number /= 10;
             }
 
+            // Pad the list with zeros to ensure the desired length
+            while (digits.Count < desiredLength)
+            {
+                digits.Add(0);
+            }
+
+            // Reverse the list to maintain the correct order of digits
             digits.Reverse();
+
             return digits.ToArray();
         }
         public static int[] GetDigitsMilli(int number)
