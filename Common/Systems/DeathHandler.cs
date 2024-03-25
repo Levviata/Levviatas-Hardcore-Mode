@@ -496,7 +496,7 @@ namespace levviatashardcoremode.Common.Systems
                     }
                 }
 
-				if (markerIndex >= 60)
+				if (markerIndex >= 45)
 				{
                     if (afterTimerMarker > 2)
 					{
