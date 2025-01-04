@@ -1,0 +1,1 @@
+# Levviata's Hardcore Mode
